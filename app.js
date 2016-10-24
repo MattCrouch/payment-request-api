@@ -5,17 +5,18 @@ var https = require('https');
 var app = express();
 
 https.createServer({
-      key: fs.readFileSync('key.pem'),
-      cert: fs.readFileSync('cert.pem')
-    }, app).listen(3000, function () {
-  console.log('Example app listening on port 3000!');
+	key: fs.readFileSync('key.pem'),
+	cert: fs.readFileSync('cert.pem')
+}, app).listen(3000, function () {
+	console.log('Example Storefront server started.');
+	console.log('Visit https://localhost:3000');
 });
 
 app.use(express.static('public'));
 app.use(bodyParser.json());
 
 app.post('/checkout', function (req, res) {
-    console.log("##### PAYMENT REQUEST ######");
+    console.log("##### PAYMENT REQUEST INCOMING ######");
     console.log(req.body);
 
     //Simulate failure if security code is '000'
