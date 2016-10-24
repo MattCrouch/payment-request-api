@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Example Storefront</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="style.css" rel="stylesheet">
+    </head>
+    <body>
+        <nav>
+            <div class="wrapper">
+                <button id="basket-button" type="button" aria-label="Basket">
+                    <span class="price">&pound;0.00</span>
+                    <img src="icons/basket.svg" alt="Basket" />
+                </button>
+            </div>
+        </nav>
+
+        <div class="wrapper">
+            <section class="products">
+                <h2>Best Sellers</h2>
+                
+                <div class="product" data-id="1">
+                    <img src="products/book.jpg" alt="Book" />
+                    <div class="description">
+                        <h3>Book</h3>
+                        <p>This is a book. Isn't it wonderful?</p>
+                        <span class="price">&pound;20.00</span>
+                    </div>
+                    <div class="actions">
+                        <button type="button">Add to Basket</button>
+                    </div>
+                </div>
+
+                <div class="product" data-id="2">
+                    <img src="products/hat.png" alt="Hat" />
+                    <div class="description">
+                        <h3>Hat</h3>
+                        <p>This is a hat. It's better than a book.</p>
+                        <span class="price">&pound;12.00</span>
+                    </div>
+                    <div class="actions">
+                        <button type="button">Add to Basket</button>
+                    </div>
+                </div>
+
+                <div class="product" data-id="3">
+                    <img src="products/t-shirt.jpg" alt="T-Shirt" />
+                    <div class="description">
+                        <h3>T-Shirt</h3>
+                        <p>This is a T-shirt. Keeps you from being naked.</p>
+                        <span class="price">&pound;15.00</span>
+                    </div>
+                    <div class="actions">
+                        <button type="button">Add to Basket</button>
+                    </div>
+                </div>
+
+
+            </section>
+        </div>
+
+        <script src="Basket.js"></script>
+        <script src="Checkout.js"></script>
+        <script src="Core.js"></script>
+    </body>
+</html>
