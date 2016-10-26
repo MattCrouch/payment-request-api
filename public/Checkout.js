@@ -2,7 +2,7 @@ var Checkout = (function(basket) {
     //Check if Payment Request API is supported
     if(!window.PaymentRequest) {
         //In production, you would need to display a regular payment form instead
-        throw new Error("PaymentRequest API not supported");
+        throw new Error("Payment Request API not supported");
     }
     
     //Don't go further if the basket is empty
