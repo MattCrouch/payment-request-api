@@ -1,16 +1,28 @@
 (function() {
     let products = {
         1: {
-            name: "Book",
-            price: 20.00
+            name: "Cremoso",
+            price: 22.00
         },
         2: {
-            name: "Hat",
-            price: 12.00
+            name: "Forte",
+            price: 22.50
         },
         3: {
-            name: "T-Shirt",
+            name: "Immediato",
+            price: 17.50
+        },
+        4: {
+            name: "Macinato",
+            price: 20.00
+        },
+        5: {
+            name: "Miscelato",
             price: 15.00
+        },
+        6: {
+            name: "Ricco",
+            price: 30.00
         }
     };
 
