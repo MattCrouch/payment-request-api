@@ -198,7 +198,6 @@ var Basket = (function(basketButton, products) {
                 });
             }
         } catch(e) {
-            console.log(":(");
             alert(e.message);
         }
     }

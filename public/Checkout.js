@@ -42,7 +42,7 @@ var Checkout = (function(basket) {
     };
 
     //Hold the current set option of the shipping method
-    var currentShippingMethodId;
+    var currentShipId;
 
     //Contains all details related to the customer's payment method
     var method = [
@@ -63,6 +63,13 @@ var Checkout = (function(basket) {
         }
     };
 
+    //Contains extra details about the transaction, such as other details to ask for
+    var options = {
+        requestShipping: true,
+        requestPayerPhone: true,
+        requestPayerEmail: true
+    }
+
     details.total.amount.value = generateTotal().toFixed(2);
 
     function generateDisplayItems() {
@@ -71,7 +78,7 @@ var Checkout = (function(basket) {
         //Build "purchases" from basket items
         var total = 0;
 
-        for(let id in basket) {
+        for(var id in basket) {
             if (!basket.hasOwnProperty(id)) continue;
 
             total += basket[id].price * basket[id].qty;
@@ -86,12 +93,12 @@ var Checkout = (function(basket) {
         });
 
         //Add shipping info in if set
-        if(request && currentShippingMethodId && allShippingMethods.hasOwnProperty(currentShippingMethodId)) {
+        if(request && currentShipId && allShippingMethods.hasOwnProperty(currentShipId)) {
             displayItems.push({
                 label: "Shipping",
                 amount: {
-                    currency: allShippingMethods[currentShippingMethodId].amount.currency,
-                    value: allShippingMethods[currentShippingMethodId].amount.value
+                    currency: allShippingMethods[currentShipId].amount.currency,
+                    value: allShippingMethods[currentShipId].amount.value
                 }
             });
         }
@@ -109,13 +116,6 @@ var Checkout = (function(basket) {
         return displayItemsTotal;
     }
 
-    //Contains extra details about the transaction, such as other details to ask for
-    var options = {
-        requestShipping: true,
-        requestPayerPhone: true,
-        requestPayerEmail: true
-    }
-
     //Set up the PaymentRequest with the correct values
     var request = new PaymentRequest(method, details, options);
 
@@ -125,7 +125,7 @@ var Checkout = (function(basket) {
             var shippingOptions = [];
 
             //Reset shipping method when changing address
-            currentShippingMethodId = undefined;
+            currentShipId = undefined;
 
             if(address.country == "GB") {
                 //Offer first and second class postage
@@ -149,7 +149,7 @@ var Checkout = (function(basket) {
     //Fire when shipping option changes
     request.addEventListener('shippingoptionchange', e => {
         e.updateWith(((details, shippingOptionId) => {
-            currentShippingMethodId = shippingOptionId;
+            currentShipId = shippingOptionId;
             //Update display items based on shipping option selected
             details.displayItems = generateDisplayItems();
             details.total.amount.value = generateTotal().toFixed(2);
@@ -161,6 +161,7 @@ var Checkout = (function(basket) {
                 } else {
                     shippingOption.selected = false;
                 }
+                shippingOption.selected = (shippingOption.id == shippingOptionId ? true : false)
             }, this);
 
             return Promise.resolve(details);
@@ -194,26 +195,23 @@ var Checkout = (function(basket) {
                 body: JSON.stringify(paymentDetails)
             }).then(res => {
                 if (res.status >= 200 && res.status < 300) {  
-                    return Promise.resolve(res)  
+                    paymentResponse.complete("success").then(function() {
+                        request = null;
+                        topResolve(res);
+                    });
                 } else {  
-                    return Promise.reject(new Error(res.statusText))  
+                    return Promise.reject(new Error(res.statusText));  
                 } 
-            }).then(res => {
-                //Payment was accepted
-                paymentResponse.complete("success").then(function() {
-                    request = undefined;
-                    topResolve(res);
-                });
             }).catch(err => {
                 //Payment was rejected
                 paymentResponse.complete("fail").then(function() {
-                    request = undefined;
+                    request = null;
                     topReject(err);
                 });
             });    
         }).catch(function(err) {
             //Other error, e.g. user cancelled payment
-            request = undefined;
+            request = null;
             topReject(err);
         });
     });
